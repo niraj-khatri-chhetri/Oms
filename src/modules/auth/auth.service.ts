@@ -7,6 +7,7 @@ import { User } from '../maintenance/user/types/user.types';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -21,13 +22,16 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-      expiresIn: '15m',
+      expiresIn: '1m',
     });
 
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-      expiresIn: '7d',
-    });
+    const refreshToken = this.jwtService.sign(
+      { ...payload },
+      {
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+        expiresIn: '7d',
+      },
+    );
 
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
 
@@ -45,7 +49,7 @@ export class AuthService {
     };
   }
 
-  async refresh(refreshToken: string, userId: number) {
+  async refresh(refreshToken: string, userId: string) {
     let payload: any;
 
     try {
@@ -56,7 +60,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid token');
     }
 
-    const [user] = await this.db.select().from(users).where(eq(users.id, payload.sub));
+    if (payload.sub !== userId) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    const [user] = await this.db.select().from(users).where(eq(users.id, userId));
 
     if (!user || !user.refreshToken) {
       throw new UnauthorizedException('Invalid token');
@@ -69,17 +77,17 @@ export class AuthService {
     }
 
     const newAccessToken = this.jwtService.sign(
-      { sub: user.id, email: user.email },
+      { sub: user.id },
       {
         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-        expiresIn: '15m',
+        expiresIn: '1m',
       },
     );
 
     const newRefreshToken = this.jwtService.sign(
-      { sub: user.id, email: user.email },
+      { sub: user.id },
       {
-        secret: process.env.JWT_REFRESH_SECRET,
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
         expiresIn: '7d',
       },
     );
@@ -111,7 +119,11 @@ export class AuthService {
     return user;
   }
 
-  async logout(userId: string) {
-    await this.db.update(users).set({ refreshToken: null }).where(eq(users.id, userId));
+  async logout(refreshToken: string) {
+    const payload = this.jwtService.verify(refreshToken, {
+      secret: process.env.JWT_REFRESH_SECRET,
+    });
+
+    await this.db.update(users).set({ refreshToken: null }).where(eq(users.id, payload.sub));
   }
 }
