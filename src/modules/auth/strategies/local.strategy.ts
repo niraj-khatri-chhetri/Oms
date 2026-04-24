@@ -1,10 +1,12 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../auth.service';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
+  private readonly logger = new Logger(LocalStrategy.name);
+
   constructor(private readonly authService: AuthService) {
     super({
       usernameField: 'email',
@@ -12,7 +14,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(email: string, password: string) {
-    console.log('Validating.....');
+    this.logger.log('Validation user with email: ' + email);
     return await this.authService.validateUser({ email, password });
   }
 }

@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './modules/maintenance/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DepartmentModule } from './modules/maintenance/department/department.module';
+import { AccessControlModule } from './modules/maintenance/access-control/access-control.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DepartmentModule } from './modules/maintenance/department/department.mo
     UserModule,
     AuthModule,
     DepartmentModule,
+    AccessControlModule,
   ],
   controllers: [AppController],
   providers: [AppService],

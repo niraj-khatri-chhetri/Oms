@@ -6,6 +6,9 @@ import { type User } from '../maintenance/user/types/user.types';
 import { LocalGuard } from 'src/core/guards/local.guard';
 import { JwtRefreshGuard } from 'src/core/guards/jwt-refresh.guard';
 import { Public } from 'src/common/decorators/public.decorator';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { LoginDto } from './dtos/login.dto';
+import { ApiCreateEndpoint } from 'src/common/decorators/api-endpoint.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -13,6 +16,11 @@ export class AuthController {
 
   @Public()
   @UseGuards(LocalGuard)
+  @ApiOperation({ summary: 'Login user and set access & refresh tokens in cookies' })
+  @ApiOkResponse({
+    description: 'Login successful',
+    type: LoginDto,
+  })
   @Post('login')
   async login(@CurrentUser() user: User, @Res() res: Response) {
     const { user: loggedInUser, accessToken, refreshToken } = await this.authService.login(user);
@@ -21,7 +29,7 @@ export class AuthController {
       httpOnly: true,
       secure: false,
       sameSite: 'lax',
-      maxAge: 60 * 1000,
+      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie('refreshToken', refreshToken, {
@@ -40,12 +48,10 @@ export class AuthController {
 
   @Public()
   @UseGuards(JwtRefreshGuard)
+  @ApiOperation({ summary: 'Rotate tokens using refresh token' })
   @Post('refresh')
   async refresh(@Req() req, @Res() res: Response) {
     const { userId, refreshToken } = req.user;
-
-    console.log('Refreshing token for userId:', userId);
-    console.log('Received refresh token:', refreshToken);
 
     const { accessToken, refreshToken: newRefreshToken } = await this.authService.refresh(
       refreshToken,
@@ -56,7 +62,7 @@ export class AuthController {
       httpOnly: true,
       secure: false,
       sameSite: 'lax',
-      maxAge: 60 * 1000,
+      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie('refreshToken', newRefreshToken, {
@@ -73,19 +79,26 @@ export class AuthController {
   }
 
   @Public()
+  @ApiCreateEndpoint({
+    summary: 'Logout user and clear tokens from cookies',
+    includeAuthErrors: false,
+  })
   @Post('logout')
   async logout(@Req() req, @Res() res: Response) {
-    const refreshToken = req.cookies?.refreshToken;
+    // const refreshToken = req.cookies?.refreshToken;
 
-    if (refreshToken) {
-      await this.authService.logout(refreshToken).then(() => {
-        res.clearCookie('accessToken');
-        res.clearCookie('refreshToken');
-      });
-    } else {
-      res.clearCookie('accessToken');
-      res.clearCookie('refreshToken');
-    }
+    // if (refreshToken) {
+    //   await this.authService.logout(refreshToken).then(() => {
+    //     res.clearCookie('accessToken');
+    //     res.clearCookie('refreshToken');
+    //   });
+    // } else {
+    //   res.clearCookie('accessToken');
+    //   res.clearCookie('refreshToken');
+    // }
+
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
 
     res.json({
       data: {},

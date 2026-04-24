@@ -10,8 +10,6 @@ const logger = new Logger('DatabaseModule');
 export const databaseProvider = {
   provide: DRIZZLE,
   useFactory: async () => {
-    console.log('Dataabse url: ', process.env.DATABASE_URL);
-
     const pool = new Pool({
       connectionString: process.env.DATABASE_URL,
     });

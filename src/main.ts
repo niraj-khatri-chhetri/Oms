@@ -3,13 +3,16 @@ import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 
+import { setupSwagger } from './config/swagger.config';
+import { ApiResponseInterceptor } from './common/interceptors/api-response.interceptor';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: false,
+      forbidNonWhitelisted: true,
       transform: true,
       transformOptions: {
         enableImplicitConversion: true,
@@ -25,6 +28,10 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
+
+  app.useGlobalInterceptors(new ApiResponseInterceptor());
+
+  setupSwagger(app);
 
   await app.listen(process.env.PORT ?? 8000);
 }

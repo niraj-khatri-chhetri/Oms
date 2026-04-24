@@ -7,7 +7,7 @@ import { User } from '../maintenance/user/types/user.types';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import { randomUUID } from 'crypto';
+import { createHash, randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +22,7 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-      expiresIn: '1m',
+      expiresIn: '15m',
     });
 
     const refreshToken = this.jwtService.sign(
@@ -33,7 +33,8 @@ export class AuthService {
       },
     );
 
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    const tokenHash = createHash('sha256').update(refreshToken).digest('hex');
+    const hashedRefreshToken = await bcrypt.hash(tokenHash, 10);
 
     await this.db
       .update(users)
@@ -70,7 +71,8 @@ export class AuthService {
       throw new UnauthorizedException('Invalid token');
     }
 
-    const isRefreshTokenValid = await bcrypt.compare(refreshToken, user.refreshToken);
+    const tokenHash = createHash('sha256').update(refreshToken).digest('hex');
+    const isRefreshTokenValid = await bcrypt.compare(tokenHash, user.refreshToken);
 
     if (!isRefreshTokenValid) {
       throw new UnauthorizedException('Invalid token');
@@ -80,7 +82,7 @@ export class AuthService {
       { sub: user.id },
       {
         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-        expiresIn: '1m',
+        expiresIn: '15m',
       },
     );
 
@@ -92,7 +94,8 @@ export class AuthService {
       },
     );
 
-    const hashed = await bcrypt.hash(newRefreshToken, 10);
+    const newTokenHash = createHash('sha256').update(newRefreshToken).digest('hex');
+    const hashed = await bcrypt.hash(newTokenHash, 10);
 
     await this.db
       .update(users)
@@ -112,9 +115,10 @@ export class AuthService {
 
     const [user] = await this.db.select().from(users).where(eq(users.email, email));
 
-    if (!user || user.password !== password) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+    if (!user) throw new UnauthorizedException('Invalid credentials');
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw new UnauthorizedException('Invalid credentials');
 
     return user;
   }
