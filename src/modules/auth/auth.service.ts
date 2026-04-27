@@ -15,10 +15,11 @@ export class AuthService {
     @Inject(DRIZZLE) private readonly db: DrizzleDB,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   async login(user: User) {
     const payload = { sub: user.id };
+
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -117,10 +118,12 @@ export class AuthService {
 
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const { refreshToken, password: userPassword, deletedAt, ...safeUserFields } = user;
+
+    const isMatch = await bcrypt.compare(password, userPassword);
     if (!isMatch) throw new UnauthorizedException('Invalid credentials');
 
-    return user;
+    return safeUserFields;
   }
 
   async logout(refreshToken: string) {

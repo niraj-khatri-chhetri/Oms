@@ -31,10 +31,12 @@ export function setupSwagger(app: INestApplication) {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  SwaggerModule.setup('docs', app, document, {
-    swaggerOptions: {
-      withCredentials: true,
-      persistAuthorization: true,
-    },
-  });
+  if (process.env.NODE_ENV !== 'production') {
+    SwaggerModule.setup('docs', app, document, {
+      swaggerOptions: {
+        withCredentials: true,
+        persistAuthorization: true,
+      },
+    });
+  }
 }
