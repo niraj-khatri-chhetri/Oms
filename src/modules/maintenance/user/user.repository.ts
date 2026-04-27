@@ -2,10 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DRIZZLE, type DrizzleDB } from 'src/core/database/database.provider';
 import { users } from 'src/core/database/schema';
 import { NewUser, UserResponse } from './types/user.types';
+import { eq } from 'drizzle-orm'
 
 @Injectable()
 export class UserRepository {
-  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
+  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) { }
 
   async findAllUsers(): Promise<UserResponse[]> {
     const data = await this.db
@@ -20,6 +21,12 @@ export class UserRepository {
       .from(users);
     return data;
   }
+
+  async findUserByEmail(email: string): Promise<UserResponse | null> {
+    const [data] = await this.db.select().from(users).where(eq(users.email, email)).limit(1)
+    return data
+  }
+
 
   async createUser(userData: NewUser): Promise<UserResponse> {
     const [data] = await this.db.insert(users).values(userData).returning();

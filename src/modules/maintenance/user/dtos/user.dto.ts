@@ -6,12 +6,20 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({
-    description: 'User name',
-    example: 'John Doe',
+    description: 'User first name',
+    example: 'John',
   })
   @IsString()
   @IsNotEmpty()
-  name!: string;
+  firstName!: string;
+
+  @ApiProperty({
+    description: 'User last name',
+    example: 'Doe',
+  })
+  @IsString()
+  @IsNotEmpty()
+  lastName!: string;
 
   @ApiProperty({
     description: 'User email',
@@ -30,7 +38,7 @@ export class CreateUserDto {
   password!: string;
 }
 
-export class UpdateUserDto extends PartialType(OmitType(CreateUserDto, ['email'] as const)) {}
+export class UpdateUserDto extends PartialType(OmitType(CreateUserDto, ['email'] as const)) { }
 
 // ─── Response DTOs ─────────────────────────────────────────────────────────
 

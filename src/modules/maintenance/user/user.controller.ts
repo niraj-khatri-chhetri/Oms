@@ -7,7 +7,7 @@ import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @ApiGetEndpoint({
     summary: 'Get all users',
