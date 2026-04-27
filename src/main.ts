@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 
 import { setupSwagger } from './config/swagger.config';
 import { ApiResponseInterceptor } from './common/interceptors/api-response.interceptor';
-import { GlobalExceptionFilter } from './common/Exception';
+import { GlobalExceptionFilter } from './common/exception';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
