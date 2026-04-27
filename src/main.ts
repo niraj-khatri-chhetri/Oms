@@ -1,10 +1,11 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 
 import { setupSwagger } from './config/swagger.config';
 import { ApiResponseInterceptor } from './common/interceptors/api-response.interceptor';
+import { GlobalExceptionFilter } from './common/Exception';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,8 +18,11 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true,
       },
+
     }),
   );
+
+  app.useGlobalFilters(new GlobalExceptionFilter(app.get(HttpAdapterHost)));
 
   // Enable CORS
   app.enableCors({

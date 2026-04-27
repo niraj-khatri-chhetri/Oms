@@ -8,6 +8,8 @@ import { UserModule } from './modules/maintenance/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DepartmentModule } from './modules/maintenance/department/department.module';
 import { AccessControlModule } from './modules/maintenance/access-control/access-control.module';
+import { APP_FILTER } from '@nestjs/core';
+// import { CatchEverythingFilter } from './common/Exception/catch-everything.filter';
 
 @Module({
   imports: [
@@ -21,6 +23,11 @@ import { AccessControlModule } from './modules/maintenance/access-control/access
     AccessControlModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: CatchEverythingFilter
+    // }
+  ],
 })
-export class AppModule {}
+export class AppModule { }
