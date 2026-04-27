@@ -144,7 +144,7 @@ export function ApiCreateEndpoint(options: Omit<ApiEndpointOptions, 'status'>) {
 export function ApiUpdateEndpoint(options: Omit<ApiEndpointOptions, 'status'>) {
   return ApiEndpoint({
     ...options,
-    status: HttpStatus.OK,
+    status: HttpStatus.CREATED,
     responseDescription: 'Resource updated',
   });
 }
@@ -152,7 +152,7 @@ export function ApiUpdateEndpoint(options: Omit<ApiEndpointOptions, 'status'>) {
 export function ApiDeleteEndpoint(options: Omit<ApiEndpointOptions, 'status'>) {
   return ApiEndpoint({
     ...options,
-    status: HttpStatus.OK,
+    status: HttpStatus.NO_CONTENT,
     responseDescription: 'Resource deleted',
   });
 }
