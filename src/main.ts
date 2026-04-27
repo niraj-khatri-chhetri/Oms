@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 
 import { setupSwagger } from './config/swagger.config';
 import { ApiResponseInterceptor } from './common/interceptors/api-response.interceptor';
-import { GlobalExceptionFilter } from './common/exception';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,7 +18,6 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true,
       },
-
     }),
   );
 
