@@ -38,7 +38,7 @@ export class CreateUserDto {
   password!: string;
 }
 
-export class UpdateUserDto extends PartialType(OmitType(CreateUserDto, ['email'] as const)) { }
+export class UpdateUserDto extends PartialType(OmitType(CreateUserDto, ['email'] as const)) {}
 
 // ─── Response DTOs ─────────────────────────────────────────────────────────
 

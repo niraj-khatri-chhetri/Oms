@@ -8,7 +8,7 @@ import { UserModule } from './modules/maintenance/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DepartmentModule } from './modules/maintenance/department/department.module';
 import { AccessControlModule } from './modules/maintenance/access-control/access-control.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, RouterModule } from '@nestjs/core';
 // import { CatchEverythingFilter } from './common/Exception/catch-everything.filter';
 
 @Module({
@@ -21,13 +21,14 @@ import { APP_FILTER } from '@nestjs/core';
     AuthModule,
     DepartmentModule,
     AccessControlModule,
+    RouterModule.register([
+      {
+        path: 'access-control',
+        module: AccessControlModule,
+      },
+    ]),
   ],
   controllers: [AppController],
-  providers: [AppService,
-    // {
-    //   provide: APP_FILTER,
-    //   useClass: CatchEverythingFilter
-    // }
-  ],
+  providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
