@@ -1,13 +1,12 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Public } from 'src/common/decorators/public.decorator';
-import { CreateUserDto, UserResponseDto } from './dtos/user.dto';
+import { CreateUserDto, UserResponseDto } from './dtos/user.dtos';
 import { ApiCreateEndpoint, ApiGetEndpoint } from 'src/common/decorators/api-endpoint.decorator';
-import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @ApiGetEndpoint({
     summary: 'Get all users',

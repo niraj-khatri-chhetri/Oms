@@ -8,7 +8,7 @@ import { users } from '../users/users.schema';
 export const roles = pgTable('roles', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull().unique(),
-  description: text('description'),
+  description: text('description').notNull(),
 
   createdBy: uuid('created_by').references(() => users.id),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
