@@ -2,7 +2,7 @@ import { relations, sql } from 'drizzle-orm';
 import { pgTable, uuid, text, timestamp } from 'drizzle-orm/pg-core';
 
 import { rolesPermissions } from './roles-permissions.schema';
-import { userRoles } from '../users/users-roles.schema';
+import { usersRoles } from '../users/users-roles.schema';
 import { users } from '../users/users.schema';
 
 export const roles = pgTable('roles', {
@@ -18,5 +18,5 @@ export const roles = pgTable('roles', {
 
 export const rolesRelations = relations(roles, ({ many }) => ({
   rolesPermissions: many(rolesPermissions),
-  usersRoles: many(userRoles),
+  usersRoles: many(usersRoles),
 }));

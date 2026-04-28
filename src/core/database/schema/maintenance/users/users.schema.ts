@@ -1,7 +1,13 @@
 import { pgTable, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm/sql/sql';
-import { userRoles } from './users-roles.schema';
 import { relations } from 'drizzle-orm';
+
+import { userContacts } from './user-contacts.schema';
+import { userPhones } from './user-phones.schema';
+import { userEmails } from './user-emails.schema';
+
+import { usersRoles } from './users-roles.schema';
+import { usersDepartments } from './users-departments.schema';
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -19,5 +25,9 @@ export const users = pgTable('users', {
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
-  roles: many(userRoles),
+  phones: many(userPhones),
+  emails: many(userEmails),
+  usersDepartments: many(usersDepartments),
+  usersRoles: many(usersRoles),
+  contacts: many(userContacts),
 }));

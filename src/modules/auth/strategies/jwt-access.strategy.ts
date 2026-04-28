@@ -13,8 +13,6 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt-access') 
       throw new Error('JWT_ACCESS_SECRET is not defined');
     }
 
-    console.log('Acess JWT Secret:', jwtSecret); // Debug log
-
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) => req?.cookies?.accessToken || null,
