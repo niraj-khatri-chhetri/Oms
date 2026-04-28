@@ -4,7 +4,7 @@ import { roles } from '../access-control/roles.schema';
 import { sql } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 
-export const userRoles = pgTable('users_roles', {
+export const usersRoles = pgTable('users_roles', {
   userId: uuid('user_id')
     .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
@@ -15,13 +15,13 @@ export const userRoles = pgTable('users_roles', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
-export const userRoleRelations = relations(userRoles, ({ one }) => ({
+export const usersRolesRelations = relations(usersRoles, ({ one }) => ({
   user: one(users, {
-    fields: [userRoles.userId],
+    fields: [usersRoles.userId],
     references: [users.id],
   }),
   role: one(roles, {
-    fields: [userRoles.roleId],
+    fields: [usersRoles.roleId],
     references: [roles.id],
   }),
 }));
