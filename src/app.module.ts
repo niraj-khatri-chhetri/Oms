@@ -13,6 +13,7 @@ import { GlobalExceptionFilter } from './common/filters';
 import { ApiResponseInterceptor } from './common/interceptors/api-response.interceptor';
 import { JwtAccessGuard } from './core/guards/jwt-access.guard';
 import { PermissionsGuard } from './core/guards/permissions.guard';
+import { DesignationModule } from './modules/maintenance/designation/designation.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { PermissionsGuard } from './core/guards/permissions.guard';
         module: AccessControlModule,
       },
     ]),
+    DesignationModule,
   ],
   controllers: [AppController],
   providers: [

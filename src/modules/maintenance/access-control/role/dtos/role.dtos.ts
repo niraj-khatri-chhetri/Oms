@@ -46,7 +46,7 @@ export class CreateRoleDto {
   permissions!: string[];
 }
 
-export class UpdateRoleDto extends PartialType(CreateRoleDto) {}
+export class UpdateRoleDto extends PartialType(CreateRoleDto) { }
 
 // ─── Response DTOs ─────────────────────────────────────────────────────────
 
