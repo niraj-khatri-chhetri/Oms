@@ -2,24 +2,25 @@ import { Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import { type User } from '../maintenance/user/types/user.types';
+import { UserResponse, type User } from '../maintenance/user/types/user.types';
 import { LocalGuard } from 'src/core/guards/local.guard';
 import { JwtRefreshGuard } from 'src/core/guards/jwt-refresh.guard';
 import { Public } from 'src/common/decorators/public.decorator';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { LoginDto } from './dtos/login.dto';
 import { ApiCreateEndpoint } from 'src/common/decorators/api-endpoint.decorator';
+import { UserResponseDto } from '../maintenance/user/dtos/user.dtos';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Public()
   @UseGuards(LocalGuard)
   @ApiOperation({ summary: 'Login user and set access & refresh tokens in cookies' })
   @ApiOkResponse({
     description: 'Login successful',
-    type: LoginDto,
+    type: UserResponseDto,
   })
   @Post('login')
   async login(@CurrentUser() user: User, @Res() res: Response) {

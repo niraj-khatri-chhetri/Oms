@@ -17,10 +17,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly permissionService: PermissionService,
-  ) {}
+  ) { }
 
   async login(user: User) {
     const payload = { sub: user.id };
+
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -125,6 +126,7 @@ export class AuthService {
       .where(eq(users.email, email));
 
     if (!user) throw new UnauthorizedException('Invalid credentials');
+
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new UnauthorizedException('Invalid credentials');
