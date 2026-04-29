@@ -9,5 +9,5 @@ export type UserResponse = Omit<User, 'password' | 'refreshToken' | 'deletedAt'>
 export type JwtPayload = {
   userId: string;
   email: string;
-  roles: string[];
+  permissions: string[];
 };
