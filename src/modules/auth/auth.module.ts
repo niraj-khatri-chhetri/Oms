@@ -11,16 +11,7 @@ import { JwtAccessGuard } from 'src/core/guards/jwt-access.guard';
 
 @Module({
   imports: [JwtModule.register({})],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    JwtAccessStrategy,
-    JwtRefreshStrategy,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAccessGuard,
-    },
-  ],
+  providers: [AuthService, LocalStrategy, JwtAccessStrategy, JwtRefreshStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

@@ -22,5 +22,6 @@ import { RoleRepository } from './role/role.repository';
     RoleService,
   ],
   controllers: [ResourceController, PermissionController, RoleController],
+  exports: [PermissionService, ResourceService, RoleService],
 })
 export class AccessControlModule {}

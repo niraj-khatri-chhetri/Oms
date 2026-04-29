@@ -18,6 +18,11 @@ export class PermissionService {
     });
   }
 
+  async findPermissionForUser(userId: string): Promise<any[]> {
+    const data = await this.permissionRepo.findPermissionForUser(userId);
+    return data;
+  }
+
   async createPermission(permission: CreatePermissionDto): Promise<PermissionResponseDto> {
     const data = await this.permissionRepo.createPermission(permission);
     return plainToInstance(PermissionResponseDto, data, {
