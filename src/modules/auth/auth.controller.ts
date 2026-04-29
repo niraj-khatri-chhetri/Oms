@@ -9,7 +9,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { LoginDto } from './dtos/login.dto';
 import { ApiCreateEndpoint } from 'src/common/decorators/api-endpoint.decorator';
-import { UserResponseDto } from '../maintenance/user/dtos/user.dto';
+import { UserResponseDto } from '../maintenance/user/dtos/user.dtos';
 
 @Controller('auth')
 export class AuthController {
