@@ -127,9 +127,8 @@ export class AuthService {
 
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
-    const { refreshToken, password: userPassword, deletedAt, ...safeUserFields } = user;
 
-    const isMatch = await bcrypt.compare(password, userPassword);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new UnauthorizedException('Invalid credentials');
 
     const { password: hashedPassword, ...userWithoutPassword } = user;
