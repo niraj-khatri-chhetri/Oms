@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -8,8 +8,11 @@ import { UserModule } from './modules/maintenance/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DepartmentModule } from './modules/maintenance/department/department.module';
 import { AccessControlModule } from './modules/maintenance/access-control/access-control.module';
-import { APP_FILTER, RouterModule } from '@nestjs/core';
-// import { CatchEverythingFilter } from './common/Exception/catch-everything.filter';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE, RouterModule } from '@nestjs/core';
+import { GlobalExceptionFilter } from './common/filters';
+import { ApiResponseInterceptor } from './common/interceptors/api-response.interceptor';
+import { JwtAccessGuard } from './core/guards/jwt-access.guard';
+import { PermissionsGuard } from './core/guards/permissions.guard';
 
 @Module({
   imports: [
@@ -29,6 +32,33 @@ import { APP_FILTER, RouterModule } from '@nestjs/core';
     ]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+      }),
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ApiResponseInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAccessGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionsGuard,
+    },
+  ],
 })
 export class AppModule {}
