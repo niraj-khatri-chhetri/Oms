@@ -7,6 +7,8 @@ import {
   ApiGetEndpoint,
   ApiUpdateEndpoint,
 } from 'src/common/decorators/api-endpoint.decorator';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import type { JwtPayload, User } from '../../user/types/user.types';
 
 @Controller('permissions')
 export class PermissionController {
@@ -21,6 +23,11 @@ export class PermissionController {
   async findAllPermissions(): Promise<PermissionResponseDto[]> {
     return this.permissionService.findAllPermissions();
   }
+
+  // @Get('/test')
+  // async test(@CurrentUser() user: JwtPayload) {
+  //   return this.permissionService.findPermissionForUser(user.userId);
+  // }
 
   @ApiCreateEndpoint({
     summary: 'Create a new permission',
