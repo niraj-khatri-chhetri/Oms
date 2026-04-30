@@ -8,6 +8,7 @@ import { userEmails } from './user-emails.schema';
 
 import { usersRoles } from './users-roles.schema';
 import { usersDepartments } from './users-departments.schema';
+import { designations } from '../designations/designations.schema';
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -15,6 +16,8 @@ export const users = pgTable('users', {
   password: varchar('password', { length: 255 }).notNull(),
   firstName: varchar('first_name', { length: 255 }).notNull(),
   lastName: varchar('last_name', { length: 255 }).notNull(),
+
+  designationId: uuid('designationId').references(() => designations.id),
 
   // This is temporary. Make another table for refresh tokens later.
   refreshToken: varchar('refresh_token', { length: 255 }),
@@ -24,10 +27,11 @@ export const users = pgTable('users', {
   deletedAt: timestamp('deleted_at', { withTimezone: true }),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   phones: many(userPhones),
   emails: many(userEmails),
   usersDepartments: many(usersDepartments),
   usersRoles: many(usersRoles),
   contacts: many(userContacts),
+  designations: one(designations)
 }));
