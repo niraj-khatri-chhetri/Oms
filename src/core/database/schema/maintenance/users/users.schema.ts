@@ -18,6 +18,7 @@ export const users = pgTable('users', {
   lastName: varchar('last_name', { length: 255 }).notNull(),
 
   designationId: uuid('designationId').references(() => designations.id),
+  managerId: uuid('manager_id').references(() => users.id),
 
   // This is temporary. Make another table for refresh tokens later.
   refreshToken: varchar('refresh_token', { length: 255 }),
@@ -33,5 +34,5 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   usersDepartments: many(usersDepartments),
   usersRoles: many(usersRoles),
   contacts: many(userContacts),
-  designations: one(designations)
+  designations: one(designations),
 }));
