@@ -17,7 +17,7 @@ export const users = pgTable('users', {
   firstName: varchar('first_name', { length: 255 }).notNull(),
   lastName: varchar('last_name', { length: 255 }).notNull(),
 
-  designationId: uuid('designationId').references(() => designations.id),
+  // designationId: uuid('designationId').references(() => designations.id),
 
   // This is temporary. Make another table for refresh tokens later.
   refreshToken: varchar('refresh_token', { length: 255 }),
