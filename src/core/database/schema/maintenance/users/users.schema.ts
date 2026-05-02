@@ -1,6 +1,5 @@
 import { pgTable, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm/sql/sql';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 
 import { userContacts } from './user-contacts.schema';
 import { userPhones } from './user-phones.schema';
@@ -8,6 +7,7 @@ import { userEmails } from './user-emails.schema';
 
 import { usersRoles } from './users-roles.schema';
 import { usersDepartments } from './users-departments.schema';
+import { designations } from '../designations/designations.schema';
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -16,7 +16,10 @@ export const users = pgTable('users', {
   firstName: varchar('first_name', { length: 255 }).notNull(),
   lastName: varchar('last_name', { length: 255 }).notNull(),
 
-  // This is temporary. Make another table for refresh tokens later.
+  designationId: uuid('designationId').references(() => designations.id),
+  // managerId: uuid('manager_id').references(() => users.id),
+
+  // // This is temporary. Make another table for refresh tokens later.
   refreshToken: varchar('refresh_token', { length: 255 }),
 
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
@@ -24,10 +27,12 @@ export const users = pgTable('users', {
   deletedAt: timestamp('deleted_at', { withTimezone: true }),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   phones: many(userPhones),
   emails: many(userEmails),
   usersDepartments: many(usersDepartments),
   usersRoles: many(usersRoles),
   contacts: many(userContacts),
+  designations: one(designations),
+
 }));

@@ -12,3 +12,6 @@ export * from './maintenance/access-control/permissions.schema';
 export * from './maintenance/access-control/resources.schema';
 export * from './maintenance/access-control/roles.schema';
 export * from './maintenance/access-control/roles-permissions.schema';
+
+//Designations
+// export * from './maintenance/designations/designations.schema';

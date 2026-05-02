@@ -10,6 +10,8 @@ import {
   ApiGetEndpoint,
   ApiUpdateEndpoint,
 } from 'src/common/decorators/api-endpoint.decorator';
+import { RequirePermissions } from 'src/common/decorators/permissions.decorator';
+import { PERMISSIONS } from 'src/common/constants/permissions.constants';
 
 @Controller('departments')
 export class DepartmentController {
@@ -17,10 +19,10 @@ export class DepartmentController {
 
   @ApiGetEndpoint({
     summary: 'Get all departments',
-    description: 'Retrieves a list of all departments',
     responseType: DepartmentResponseDto,
     isArray: true,
   })
+  @RequirePermissions(PERMISSIONS.DEPARTMENT.VIEW)
   @Get()
   async findAllDepartments() {
     return this.departmentService.findAllDepartments();
@@ -30,6 +32,7 @@ export class DepartmentController {
     summary: 'Get department by ID',
     responseType: DepartmentResponseDto,
   })
+  @RequirePermissions(PERMISSIONS.DEPARTMENT.VIEW)
   @Get(':id')
   async findDepartmentById(@Param('id') id: string) {
     return this.departmentService.findDepartmentById(id);
@@ -39,6 +42,7 @@ export class DepartmentController {
     summary: 'Creates a new department',
     responseType: DepartmentResponseDto,
   })
+  @RequirePermissions(PERMISSIONS.DEPARTMENT.CREATE)
   @Post()
   async createDepartment(@Body() createDepartmentDto: CreateDepartmentDto) {
     const data = await this.departmentService.createDepartment(createDepartmentDto);
@@ -49,6 +53,7 @@ export class DepartmentController {
     summary: 'Updates an existing department',
     responseType: DepartmentResponseDto,
   })
+  @RequirePermissions(PERMISSIONS.DEPARTMENT.UPDATE)
   @Patch(':id')
   async updateDepartment(
     @Param('id') id: string,
@@ -62,6 +67,7 @@ export class DepartmentController {
     summary: 'Deletes a department',
     description: 'Soft deletes a department by ID',
   })
+  @RequirePermissions(PERMISSIONS.DEPARTMENT.DELETE)
   @Delete(':id')
   async deleteDepartment(@Param('id') id: string) {
     await this.departmentService.deleteDepartment(id);

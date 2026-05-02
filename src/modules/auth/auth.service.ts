@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { createHash, randomUUID } from 'crypto';
+import { PermissionService } from '../maintenance/access-control/permission/permission.service';
 
 @Injectable()
 export class AuthService {
@@ -15,10 +16,12 @@ export class AuthService {
     @Inject(DRIZZLE) private readonly db: DrizzleDB,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+    private readonly permissionService: PermissionService,
+  ) { }
 
   async login(user: User) {
     const payload = { sub: user.id };
+
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -113,14 +116,25 @@ export class AuthService {
   async validateUser(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
-    const [user] = await this.db.select().from(users).where(eq(users.email, email));
+    const [user] = await this.db
+      .select({
+        userId: users.id,
+        email: users.email,
+        password: users.password,
+      })
+      .from(users)
+      .where(eq(users.email, email));
 
     if (!user) throw new UnauthorizedException('Invalid credentials');
+
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new UnauthorizedException('Invalid credentials');
 
-    return user;
+    const { password: hashedPassword, ...userWithoutPassword } = user;
+    const permissions = await this.permissionService.findPermissionForUser(user.userId);
+
+    return { ...userWithoutPassword, permissions };
   }
 
   async logout(refreshToken: string) {

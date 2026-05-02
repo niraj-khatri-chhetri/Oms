@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1776840503514,
-      "tag": "0000_cheerful_gressill",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1776923267145,
-      "tag": "0001_lonely_redwing",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1777025771949,
-      "tag": "0002_flowery_nomad",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1777368202896,
-      "tag": "0003_aberrant_joseph",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1777370231202,
-      "tag": "0004_lame_pet_avengers",
+      "when": 1777529007786,
+      "tag": "0000_lively_shaman",
       "breakpoints": true
     }
   ]
