@@ -1,6 +1,5 @@
 import { pgTable, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm/sql/sql';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 
 import { userContacts } from './user-contacts.schema';
 import { userPhones } from './user-phones.schema';
@@ -18,9 +17,9 @@ export const users = pgTable('users', {
   lastName: varchar('last_name', { length: 255 }).notNull(),
 
   designationId: uuid('designationId').references(() => designations.id),
-  managerId: uuid('manager_id').references(() => users.id),
+  // managerId: uuid('manager_id').references(() => users.id),
 
-  // This is temporary. Make another table for refresh tokens later.
+  // // This is temporary. Make another table for refresh tokens later.
   refreshToken: varchar('refresh_token', { length: 255 }),
 
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
@@ -35,4 +34,5 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   usersRoles: many(usersRoles),
   contacts: many(userContacts),
   designations: one(designations),
+
 }));

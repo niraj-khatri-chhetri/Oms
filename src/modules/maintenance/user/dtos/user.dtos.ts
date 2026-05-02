@@ -38,7 +38,7 @@ export class CreateUserDto {
   password!: string;
 }
 
-export class UpdateUserDto extends PartialType(OmitType(CreateUserDto, ['email'] as const)) {}
+export class UpdateUserDto extends PartialType(OmitType(CreateUserDto, ['email'] as const)) { }
 
 // ─── Response DTOs ─────────────────────────────────────────────────────────
 
@@ -58,6 +58,10 @@ export class UserResponseDto {
   @ApiProperty({ example: 'Magar' })
   @Expose()
   lastName!: string;
+
+  @ApiProperty({ example: '4e401fa3-7e14-4b31-aac6-56b7b8feb8fa' })
+  @Expose()
+  designationId!: string;
 
   @ApiProperty({ example: '2024-01-15T10:30:00.000Z' })
   @Expose()

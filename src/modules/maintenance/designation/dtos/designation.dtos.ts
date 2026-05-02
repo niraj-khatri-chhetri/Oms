@@ -26,24 +26,51 @@ export class CreateDesignationDto {
      @MinLength(1)
      @MaxLength(255)
      description!: string;
-
-     // @ApiProperty({
-     //      type: String,
-     //      format: 'date-time',
-     //      example: '2026-01-15T12:00:00.000Z',
-     // })
-     // @Expose()
-     // createdAt!: Date;
-
-     // @ApiProperty({
-     //      type: String,
-     //      format: 'date-time',
-     //      nullable: true,
-     //      example: '2026-01-20T08:30:00.000Z',
-     // })
-     // @Expose()
-     // updatedAt!: Date | null;
-
 }
 
 // ─── Response DTOs ─────────────────────────────────────────────────────────
+
+export class DesignationResponse {
+     @ApiProperty({
+          format: 'uuid',
+          example: 'fcef2f3b-9f8c-46e4-b4d6-43fcf52ce6dc',
+     })
+     @Expose()
+     id!: string;
+
+     @ApiProperty({ example: 'Developer' })
+     @Expose()
+     name!: string;
+
+     @ApiProperty({ example: 'Developer responsible for writing and maintaining code' })
+     @Expose()
+     description!: string;
+
+     @ApiProperty({
+          type: String,
+          format: 'date-time',
+          example: '2026-01-15T12:00:00.000Z',
+     })
+     @Expose()
+     createdAt!: Date;
+
+     @ApiProperty({
+          type: String,
+          format: 'date-time',
+          nullable: true,
+          example: '2026-01-20T08:30:00.000Z',
+     })
+     @Expose()
+     updatedAt!: Date | null;
+
+     @ApiProperty({
+          type: String,
+          format: 'date-time',
+          nullable: true,
+          example: '2026-01-20T08:30:00.000Z',
+     })
+     @Expose()
+     deletedAt!: Date | null;
+
+
+}
